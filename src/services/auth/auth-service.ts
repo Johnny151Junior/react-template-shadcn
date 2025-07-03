@@ -12,10 +12,6 @@ export const Login = async (username: string, password: string) => {
       password,
     }
   );
-  console.log(
-    response.data.data?.access_token,
-    response.data.data?.refresh_token
-  );
   if (response.data.data) {
     auth.setTokens(
       response.data.data.access_token,
@@ -26,9 +22,6 @@ export const Login = async (username: string, password: string) => {
 };
 export const getMe = async () => {
   const response = await api.get<IHttpResponse<ILoginResponse>>("auth/profile");
-  if (response.data.data) {
-    console.log("HI", response);
-  }
   return response.data.data;
 };
 
