@@ -25,6 +25,9 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
+        handle: {
+          breadcrumb: () => "Dashboard",
+        },
         path: "/dashboard",
         loader: authMiddleware,
         Component: DashboardPage,
