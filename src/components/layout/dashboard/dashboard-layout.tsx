@@ -46,7 +46,6 @@ export default function DashboardLayout() {
         {/* MAIN CONTENT */}
         <div className="flex flex-1 flex-col gap-4 p-4">
           <div className="min-h-[100vh] px-8 py-10  flex-1 rounded-md md:min-h-min">
-            {JSON.stringify(navGroups)}
             <Outlet></Outlet>
           </div>
         </div>
