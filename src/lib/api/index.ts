@@ -1,4 +1,5 @@
 import { SERVER_PREFIX, SERVER_URL } from "@/constants";
+import { LOCALSTORE_REFRESH_TOKEN_KEY } from "@/constants/auth-local-storage";
 import type { IRefreshTokenResponse } from "@/services/auth/auth.type";
 import { useAuthStore } from "@/store/auth-store";
 import type { IHttpResponse } from "@/types/http-response.type";
@@ -71,7 +72,7 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       const { setTokens, clearAuth } = useAuthStore.getState();
-      const refreshToken = localStorage.getItem("refreshToken");
+      const refreshToken = localStorage.getItem(LOCALSTORE_REFRESH_TOKEN_KEY);
       if (!refreshToken) {
         clearAuth();
         return Promise.reject(error);
