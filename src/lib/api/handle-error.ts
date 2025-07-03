@@ -11,6 +11,7 @@ interface SimplifiedError {
  * @returns A simplified error object with a message and status code.
  */
 export const handleAxiosError = (error: unknown): SimplifiedError => {
+  console.log(error);
   if (axios.isAxiosError(error)) {
     // Case 1: The server responded with an error status code (4xx or 5xx)
     if (error.response) {

@@ -1,9 +1,11 @@
-import { SERVER_URL } from "@/constants";
+import { SERVER_PREFIX, SERVER_URL } from "@/constants";
+import type { IRefreshTokenResponse } from "@/services/auth/auth.type";
 import { useAuthStore } from "@/store/auth-store";
+import type { IHttpResponse } from "@/types/http-response.type";
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: SERVER_URL,
+  baseURL: SERVER_URL + SERVER_PREFIX,
   headers: {
     "Content-Type": "application/json",
   },
@@ -48,8 +50,11 @@ api.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry
+    ) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
@@ -62,22 +67,30 @@ api.interceptors.response.use(
             return Promise.reject(err);
           });
       }
-
       originalRequest._retry = true;
       isRefreshing = true;
 
-      const { refreshToken, setTokens, clearAuth } = useAuthStore.getState();
-
+      const { setTokens, clearAuth } = useAuthStore.getState();
+      const refreshToken = localStorage.getItem("refreshToken");
       if (!refreshToken) {
         clearAuth();
         return Promise.reject(error);
       }
 
       try {
-        const { data } = await axios.post("/api/refresh", { refreshToken }); // Your refresh token endpoint
-        setTokens(data.accessToken, data.refreshToken);
-        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
-        processQueue(null, data.accessToken);
+        const resp = await axios.post<IHttpResponse<IRefreshTokenResponse>>(
+          SERVER_URL + SERVER_PREFIX + "/auth/refresh",
+          { refresh_token: refreshToken }
+        ); // Your refresh token endpoint
+        const data = resp.data.data;
+        if (!data) {
+          console.error("Failed to refresh token cause data refresh is null");
+          clearAuth();
+          return Promise.reject(error);
+        }
+        setTokens(data.access_token, data.refresh_token);
+        originalRequest.headers.Authorization = `Bearer ${data.refresh_token}`;
+        processQueue(null, data.access_token);
         return api(originalRequest);
       } catch (e) {
         processQueue(e, null);

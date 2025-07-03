@@ -28,7 +28,7 @@ export function LoginForm({ submit }: Props) {
   const form = useForm<ILoginSchema>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
     },
   });
@@ -44,7 +44,7 @@ export function LoginForm({ submit }: Props) {
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Enter your username or email below to login to your account
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -53,13 +53,13 @@ export function LoginForm({ submit }: Props) {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
-                name="email"
+                name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Username</FormLabel>
                     <FormControl>
                       <Input
-                        type="email"
+                        type="username"
                         placeholder="m@example.com"
                         {...field}
                       />
