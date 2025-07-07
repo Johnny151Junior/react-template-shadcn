@@ -13,6 +13,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import type { NavGroup } from "@/types/nav-group.type";
+import { Link } from "react-router";
 
 export function DashboardLayoutSidebar({
   navGroups,
@@ -33,7 +34,7 @@ export function DashboardLayoutSidebar({
                     {item.items.map((item) => (
                       <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton asChild isActive={item.isActive}>
-                          <a href={item.url}>{item.title}</a>
+                          <Link to={item.url}>{item.title}</Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                     ))}
@@ -43,7 +44,7 @@ export function DashboardLayoutSidebar({
             ) : (
               <SidebarMenuItem key={`${item.url}-${index}`}>
                 <SidebarMenuButton asChild isActive={item.isActive} color="red">
-                  <a href={item.url}>{item.title}</a>
+                  <Link to={item.url}>{item.title}</Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             )}

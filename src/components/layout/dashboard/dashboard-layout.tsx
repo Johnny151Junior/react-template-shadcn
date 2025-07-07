@@ -19,16 +19,31 @@ export default function DashboardLayout() {
         },
       ],
     },
+    {
+      title: "Main Functions",
+      url: "#",
+      items: [
+        {
+          title: "KPV Point",
+          url: "/kpv-point/list",
+          isActive: false,
+        },
+      ],
+    },
   ]);
 
   useEffect(() => {
     setNavGroups((prevGroups) =>
       prevGroups.map((group) => ({
         ...group,
-        items: group.items.map((item) => ({
-          ...item,
-          isActive: item.url === location.pathname,
-        })),
+        items: group.items.map((item) => {
+          const pathPart = location.pathname.split("/")[1];
+          const itemPart = item.url.split("/")[1];
+          return {
+            ...item,
+            isActive: pathPart === itemPart,
+          };
+        }),
       }))
     );
   }, [location.pathname]);

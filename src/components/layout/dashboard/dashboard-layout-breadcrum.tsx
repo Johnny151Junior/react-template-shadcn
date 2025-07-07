@@ -1,4 +1,3 @@
-// src/components/DataAwareBreadcrumb.tsx
 import React from "react";
 import { Link, useMatches } from "react-router";
 import {
