@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, type ChangeEvent, type MouseEvent } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -9,15 +9,8 @@ import {
   PaginationPrevious,
 } from "@/shared/ui/pagination";
 import type { IPaginationControlProps } from "./pagination.type";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 
-const PaginationControl: React.FC<IPaginationControlProps> = ({
+function PaginationControl({
   onPageChange,
   totalCount,
   siblingCount = 1,
@@ -25,7 +18,7 @@ const PaginationControl: React.FC<IPaginationControlProps> = ({
   pageSize,
   onPageSizeChange,
   className,
-}) => {
+}: IPaginationControlProps) {
   const DefaultPageSizes = [10, 20, 30, 40, 50];
   // The pagination logic now returns both the range and the total page count.
   const { paginationRange, totalPage } = useMemo(() => {
@@ -83,21 +76,19 @@ const PaginationControl: React.FC<IPaginationControlProps> = ({
         Page {currentPage} of {totalPage}
       </span>
       <div className="flex items-center gap-2 text-sm text-gray-600">
-        <Select
-          value={pageSize.toString()}
-          onValueChange={(value) => onPageSizeChange(Number(value))}
+        <select
+          className="h-9 w-[80px] rounded-md border border-input bg-background px-2 text-sm"
+          value={pageSize}
+          onChange={(event: ChangeEvent<HTMLSelectElement>) =>
+            onPageSizeChange(Number(event.target.value))
+          }
         >
-          <SelectTrigger className="w-[80px]">
-            <SelectValue placeholder={pageSize} />
-          </SelectTrigger>
-          <SelectContent>
-            {DefaultPageSizes.map((size) => (
-              <SelectItem key={size} value={size.toString()}>
-                {size}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          {DefaultPageSizes.map((size) => (
+            <option key={size} value={size}>
+              {size}
+            </option>
+          ))}
+        </select>
         <span>Per page</span>
       </div>
       <div className="flex  items-center gap-4">
@@ -106,8 +97,8 @@ const PaginationControl: React.FC<IPaginationControlProps> = ({
             <PaginationItem>
               <PaginationPrevious
                 href="#"
-                onClick={(e) => {
-                  e.preventDefault();
+                onClick={(event: MouseEvent<HTMLAnchorElement>) => {
+                  event.preventDefault();
                   onPrevious();
                 }}
                 className={
@@ -128,8 +119,8 @@ const PaginationControl: React.FC<IPaginationControlProps> = ({
                 <PaginationItem key={pageNumber}>
                   <PaginationLink
                     href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
+                    onClick={(event: MouseEvent<HTMLAnchorElement>) => {
+                      event.preventDefault();
                       onPageChange(pageNumber as number);
                     }}
                     isActive={currentPage === pageNumber}
@@ -143,8 +134,8 @@ const PaginationControl: React.FC<IPaginationControlProps> = ({
             <PaginationItem>
               <PaginationNext
                 href="#"
-                onClick={(e) => {
-                  e.preventDefault();
+                onClick={(event: MouseEvent<HTMLAnchorElement>) => {
+                  event.preventDefault();
                   onNext();
                 }}
                 className={
@@ -159,5 +150,5 @@ const PaginationControl: React.FC<IPaginationControlProps> = ({
       </div>
     </div>
   );
-};
+}
 export default PaginationControl;
